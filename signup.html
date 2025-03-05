@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="signupApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #0F2027, #203A43, #2C5364);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0);
+            backdrop-filter: blur(10px); 
+            color: #E0E0E0;
+            padding: 15px 30px;
+        }
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .header .nav-links a {
+            color: #E0E0E0;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        .container {
+            width: 300px;
+            margin: 100px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.3); 
+            backdrop-filter: blur(10px);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        input[type="text"], input[type="password"],  input[type="email"] {
+            width: 95%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+        .login {
+            margin-top: 10px;
+        }
+        .login a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body ng-controller="SignupController">
+    <div class="header">
+        <div class="title">Homomorphic Encryption</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="model_page">Model</a>
+            <a href="aboutproj_page">About Project</a>
+            <a href="aboutus_page">About Us</a>
+            <a href="login_page">Log In</a>
+        </div>
+    </div>
+    <div class="container">
+        <h2>Signup</h2>
+        <form ng-submit="submitForm()">
+            <input type="text" ng-model="user.username" placeholder="Username" required>
+            <input type="text" ng-model="user.fullname" placeholder="Full Name" required>
+            <input type="email" ng-model="user.email" placeholder="Email" required>
+            <input type="text" ng-model="user.contact" placeholder="Contact" required>
+            <input type="password" ng-model="user.password" placeholder="Password" required>
+            <input type="password" ng-model="user.confirmpassword" placeholder="Confirm Password" required>
+            <div class="error" ng-show="passwordMismatch">Passwords do not match!</div>
+            <button type="submit" class="btn">Sign Up</button><br><br>
+        </form>
+        <div class="error" ng-show="errorMessage">{{errorMessage}}</div>
+        <div class="login">
+            Already have an account? <a href="login_page">Log In</a>
+        </div>
+    </div>
+
+    <script>
+        var app = angular.module('signupApp', []);
+        app.controller('SignupController', function($scope, $http, $window) {
+            $scope.user = {};
+            $scope.passwordMismatch = false;
+            $scope.errorMessage = "";
+
+            $scope.submitForm = function() {
+                if ($scope.user.password !== $scope.user.confirmpassword) {
+                    $scope.passwordMismatch = true;
+                    return;
+                } else {
+                    $scope.passwordMismatch = false;
+                }
+                
+                $http.post('/signup', $scope.user).then(function(response) {
+                    if (response.data.success) {
+                        $window.location.href = '/login_page';
+                    } else {
+                        $scope.errorMessage = response.data.message;
+                    }
+                }, function(error) {
+                    $scope.errorMessage = "An error occurred. Please try again.";
+                });
+            };
+        });
+    </script>
+</body>
+</html>

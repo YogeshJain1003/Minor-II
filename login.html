@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="loginApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #0F2027, #203A43, #2C5364);
+
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0); 
+            backdrop-filter: blur(10px); 
+            transition: background 0.3s ease-in-out;
+            color: #E0E0E0;
+            padding: 15px 30px;
+        }
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .header .nav-links a {
+            color: #E0E0E0;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        .container {
+            width: 300px;
+            margin: 100px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.3); 
+            backdrop-filter: blur(10px);
+            transition: background 0.3s ease-in-out;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        input[type="text"], input[type="password"] {
+            width: 95%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .signup {
+            margin-top: 10px;
+        }
+        .signup a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body ng-controller="LoginController">
+    <div class="header">
+        <div class="title">Homomorphic Encryption</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="model_page">Model</a>
+            <a href="aboutproj_page">About Project</a>
+            <a href="aboutus_page">About Us</a>
+            <a href="login_page">Log In</a>
+        </div>
+    </div>
+    <div class="container">
+        <h2>Login</h2>
+        <form name="loginForm" ng-submit="login()" novalidate>
+            <input type="text" name="username" ng-model="user.username" placeholder="Username" required>
+            <div class="error" ng-show="loginForm.username.$touched && loginForm.username.$invalid">Username is required</div>
+            
+            <input type="password" name="password" ng-model="user.password" placeholder="Password" required>
+            <div class="error" ng-show="loginForm.password.$touched && loginForm.password.$invalid">Password is required</div>
+            
+            <button type="submit" class="btn" ng-disabled="loginForm.$invalid">Log In</button><br><br>
+            <div class="error" ng-show="errorMessage">{{ errorMessage }}</div>
+        </form>
+        <div class="signup">
+            Don't have an account? <a href="signup_page">Sign Up</a>
+        </div>
+    </div>
+    
+    <script>
+        var app = angular.module('loginApp', []);
+        app.controller('LoginController', function($scope, $http, $window) {
+            $scope.user = {};
+            $scope.errorMessage = "";
+            
+            $scope.login = function() {
+                if ($scope.user.username && $scope.user.password) {
+                    $http.post('/login', $scope.user)
+                        .then(function(response) {
+                            if (response.data.success) {
+                                $window.location.href = '/index';
+                            } else {
+                                $scope.errorMessage = "Wrong username or password";
+                            }
+                        }, function(error) {
+                            $scope.errorMessage = "Login failed. Please try again.";
+                        });
+                }
+            };
+        });
+    </script>
+</body>
+</html>

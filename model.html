@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="uploadApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #0F2027, #203A43, #2C5364);
+            color: #E0E0E0;
+            text-align: center;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0);
+            backdrop-filter: blur(10px);
+            transition: background 0.3s ease-in-out;
+            color: #E0E0E0;
+            padding: 15px 30px;
+        }
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .header .nav-links a {
+            color: #E0E0E0;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        .upload-section {
+            margin: 50px auto;
+            width: 60%;
+            padding: 20px;
+            border: 2px dashed #E0E0E0;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        .upload-section.dragover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .upload-section p {
+            margin: 10px 0;
+        }
+        .btn {
+            width: 10%;
+            padding: 10px;
+            background: #333;
+            color: white;
+            font-size: large;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body ng-controller="UploadController">
+    <div class="header">
+        <div class="title">Homomorphic Encryption</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="model_page">Model</a>
+            <a href="aboutproj_page">About Project</a>
+            <a href="aboutus_page">About Us</a>
+            <a href="login_page">Log In</a>
+        </div>
+    </div>
+    
+    <h1>Upload Image</h1>
+    <div class="upload-section" 
+         ng-class="{'dragover': isDragging}" 
+         ng-drop="true" 
+         ng-dragover="onDragOver($event)" 
+         ng-dragleave="onDragLeave($event)" 
+         ng-drop-success="onFileDrop($event)">
+        <p>Drag and drop an image here</p>
+        <input type="file" id="fileInput" accept="image/*" hidden ng-model="file">
+    </div>
+    <button class="btn" ng-click="uploadFile()">Upload Image</button>
+    
+    <script>
+        angular.module('uploadApp', [])
+        .controller('UploadController', ['$scope', function($scope) {
+            $scope.isDragging = false;
+
+            $scope.onDragOver = function(event) {
+                event.preventDefault();
+                $scope.$apply(() => {
+                    $scope.isDragging = true;
+                });
+            };
+
+            $scope.onDragLeave = function(event) {
+                event.preventDefault();
+                $scope.$apply(() => {
+                    $scope.isDragging = false;
+                });
+            };
+
+            $scope.onFileDrop = function(event) {
+                event.preventDefault();
+                $scope.$apply(() => {
+                    const files = event.dataTransfer.files;
+                    if (files.length > 0) {
+                        $scope.file = files[0];
+                        alert('File dropped: ' + $scope.file.name);
+                    }
+                    $scope.isDragging = false;
+                });
+            };
+
+            $scope.uploadFile = function() {
+                if ($scope.file) {
+                    alert('File uploaded successfully: ' + $scope.file.name);
+                } else {
+                    alert('No file selected');
+                }
+            };
+        }]);
+    </script>
+</body>
+</html>

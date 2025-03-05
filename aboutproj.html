@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #0F2027, #203A43, #2C5364);
+            color: #E0E0E0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0);
+            backdrop-filter: blur(10px);
+            transition: background 0.3s ease-in-out;
+            color: #E0E0E0;
+            padding: 15px 30px;
+        }
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .header .nav-links a {
+            color: #E0E0E0;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        .container {
+            max-width: 850px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .container h1 {
+            text-align: center;
+            font-size: 28px;
+        }
+        .container p, .container ul {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .container ul li::before {
+            content: '✅ ';
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">Homomorphic Encryption</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="model_page">Model</a>
+            <a href="aboutproj_page">About Project</a>
+            <a href="aboutus_page">About Us</a>
+            <a href="login_page">Log In</a>
+        </div>
+    </div>
+    <h1 style="text-align: center; margin-top: 20px;">About the Project</h1>
+    <div class="container">
+        <p>Our project focuses on <em>privacy-preserving deep learning</em> by integrating <em>Homomorphic Encryption (HE) and Federated Learning (FL)</em> to ensure secure AI model training without exposing sensitive data. We are developing a <em>user-friendly front-end interface</em> that enables seamless interaction with our encrypted AI system while maintaining data security and compliance with privacy regulations like <em>GDPR and HIPAA</em>.</p>
+        
+        <h2>Key Features</h2>
+        <ul>
+            <li><em>Encrypted AI Model Training</em> – Secure computations on encrypted data without decryption.</li>
+            <li><em>Federated Learning Integration</em> – Decentralized training to enhance privacy and scalability.</li>
+            <li><em>User-Friendly Front End</em> – Intuitive UI for secure model access, encrypted data input, and result retrieval.</li>
+            <li><em>Real-World Applications</em> – Applicable in <em>healthcare, finance, digital forensics, and education</em>, ensuring data security in AI-driven solutions.</li>
+            <li><em>Robust Security</em> – Protection against adversarial attacks, unauthorized access, and data breaches.</li>
+        </ul>
+    </div>
+</body>
+</html>
