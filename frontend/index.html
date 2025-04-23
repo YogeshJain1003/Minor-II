@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('/static/logoback.jpg');
+            
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0);
+            backdrop-filter: blur(10px);
+            transition: background 0.3s ease-in-out;
+            color: #E0E0E0;
+            padding: 15px 30px;
+        }
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .header .nav-links a {
+            color: #E0E0E0;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        .logo-container {
+        text-align: center;
+        }
+
+        .logo {
+            width: 800px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">Homomorphic Encryption</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="model_page">Model</a>
+            <a href="aboutproj_page">About Project</a>
+            <a href="aboutus_page">About Us</a>
+            <a href="login_page">Log In</a>
+        </div>
+    </div>
+    <div class="logo-container">
+        <img src="/static/log.jpeg" alt="Logo" class="logo">
+    </div>
+</body>
+</html>
