@@ -32,11 +32,11 @@ def create_tenseal_context():
         print(f"Error creating TenSEAL context: {e}")
         return None
 
-def encrypt_mnist(chunk_size=1000):
+def encrypt_mnist(chunk_size=10):
     """
     Encrypt MNIST dataset in chunks
     Args:
-        chunk_size: Number of images per chunk (default: 1000)
+        chunk_size: Number of images per chunk (default: 10)
     """
     # Clean up any existing files
     cleanup_temp_files()
@@ -54,7 +54,7 @@ def encrypt_mnist(chunk_size=1000):
     try:
         print("📥 Loading MNIST dataset...")
         dataset = torchvision.datasets.MNIST(root=str(data_dir), train=True, transform=transform, download=True)
-        data_loader = torch.utils.data.DataLoader(dataset, batch_size=10, shuffle=False, num_workers=0)
+        data_loader = torch.utils.data.DataLoader(dataset, batch_size=5, shuffle=False, num_workers=0)
 
         # Create TenSEAL context
         print("🔑 Creating encryption context...")
@@ -127,5 +127,5 @@ def encrypt_mnist(chunk_size=1000):
         raise
 
 if __name__ == "__main__":
-    # You can adjust the chunk_size here (default is 1000 images per chunk)
-    encrypt_mnist(chunk_size=1000)
+    # You can adjust the chunk_size here (default is 10 images per chunk)
+    encrypt_mnist(chunk_size=10)
