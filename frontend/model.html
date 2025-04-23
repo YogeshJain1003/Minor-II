@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="uploadApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #0F2027, #203A43, #2C5364);
+            color: #E0E0E0;
+            text-align: center;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s ease-in-out;
+            color: #E0E0E0;
+            padding: 15px 30px;
+        }
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .header .nav-links a {
+            color: #E0E0E0;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        .upload-section {
+            margin: 50px auto;
+            width: 60%;
+            padding: 20px;
+            border: 2px dashed #E0E0E0;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+        }
+        .upload-section.dragover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .upload-section p {
+            margin: 10px 0;
+        }
+        .btn {
+            width: 10%;
+            padding: 10px;
+            background: #333;
+            color: white;
+            font-size: large;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .preview {
+            margin-top: 20px;
+        }
+        .preview img {
+            max-width: 300px;
+            border-radius: 10px;
+            border: 2px solid #ccc;
+        }
+    </style>
+</head>
+<body ng-controller="UploadController">
+    <div class="header">
+        <div class="title">Image Upload</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="model_page">Model</a>
+            <a href="aboutproj_page">About Project</a>
+            <a href="aboutus_page">About Us</a>
+            <a href="login_page">Log In</a>
+        </div>
+    </div>
+
+    <h1>Upload Image</h1>
+    <div class="upload-section" 
+         id="drop-zone"
+         ng-class="{'dragover': isDragging}"
+         ng-click="triggerFileInput()">
+        <p>Drag and drop an image here or click to select</p>
+        <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+    </div>
+
+    <div class="preview" ng-if="previewUrl">
+        <h3>Selected Image:</h3>
+        <img ng-src="{{previewUrl}}" alt="Image Preview">
+    </div>
+
+    <button class="btn" ng-click="uploadFile()">Upload Image</button>
+
+    <script>
+        angular.module('uploadApp', [])
+        .controller('UploadController', ['$scope', function($scope) {
+            $scope.isDragging = false;
+            $scope.file = null;
+            $scope.previewUrl = null;
+
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('fileInput');
+
+            $scope.triggerFileInput = function() {
+                fileInput.click();
+            };
+
+            const handleFileSelection = function(file) {
+                $scope.$apply(() => {
+                    $scope.file = file;
+                    $scope.previewUrl = URL.createObjectURL(file);
+                });
+            };
+
+            fileInput.addEventListener('change', function (event) {
+                if (event.target.files.length > 0) {
+                    handleFileSelection(event.target.files[0]);
+                }
+            });
+
+            dropZone.addEventListener('dragover', function (event) {
+                event.preventDefault();
+                $scope.$apply(() => {
+                    $scope.isDragging = true;
+                });
+            });
+
+            dropZone.addEventListener('dragleave', function (event) {
+                event.preventDefault();
+                $scope.$apply(() => {
+                    $scope.isDragging = false;
+                });
+            });
+
+            dropZone.addEventListener('drop', function (event) {
+                event.preventDefault();
+                const files = event.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFileSelection(files[0]);
+                    $scope.$apply(() => {
+                        $scope.isDragging = false;
+                    });
+                }
+            });
+
+            $scope.uploadFile = function() {
+                if (!$scope.file) {
+                    alert('No file selected');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('image', $scope.file);
+
+                fetch('/upload_image', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Image uploaded successfully!');
+                    // Clear file and preview after upload
+                    $scope.$apply(() => {
+                        $scope.file = null;
+                        $scope.previewUrl = null;
+                        fileInput.value = ""; // reset file input
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Upload failed');
+                });
+            };
+        }]);
+    </script>
+</body>
+</html>
