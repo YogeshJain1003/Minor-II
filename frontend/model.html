@@ -98,12 +98,41 @@
 
     <button class="btn" ng-click="uploadFile()">Upload Image</button>
 
+    <div class="loading" ng-if="loading">
+        <p>Loading... Please wait.</p>
+    </div>
+
+    <div class="result" ng-if="result">
+        <h3>Result:</h3>
+        <p><strong>Filename:</strong> {{result.filename}}</p>
+        <p><strong>Predicted Label:</strong> {{result.predicted_label}}</p>
+        <p>{{result.message}}</p>
+        <div ng-if="result.original_image">
+            <h4>Original Image (before preprocessing):</h4>
+            <img ng-src="{{result.original_image}}" alt="Original Image" style="max-width:200px; border:1px solid #ccc; border-radius:8px; margin:10px 0;">
+        </div>
+        <div ng-if="result.input_image">
+            <h4>Input Image (preprocessed):</h4>
+            <img ng-src="{{result.input_image}}" alt="Input Image" style="max-width:200px; border:1px solid #ccc; border-radius:8px; margin:10px 0;">
+        </div>
+        <div ng-if="result.encrypted_image_plot">
+            <h4>Encrypted Image Plot (decrypted for visualization):</h4>
+            <img ng-src="{{result.encrypted_image_plot}}" alt="Encrypted Image Plot" style="max-width:200px; border:1px solid #ccc; border-radius:8px; margin:10px 0;">
+        </div>
+        <div ng-if="result.encrypted_image_raw_plot">
+            <h4>Encrypted Image Plot (raw ciphertext bytes):</h4>
+            <img ng-src="{{result.encrypted_image_raw_plot}}" alt="Encrypted Image Raw Plot" style="max-width:200px; border:1px solid #ccc; border-radius:8px; margin:10px 0;">
+        </div>
+    </div>
+
     <script>
         angular.module('uploadApp', [])
         .controller('UploadController', ['$scope', function($scope) {
             $scope.isDragging = false;
             $scope.file = null;
             $scope.previewUrl = null;
+            $scope.result = null;
+            $scope.loading = false;
 
             const dropZone = document.getElementById('drop-zone');
             const fileInput = document.getElementById('fileInput');
@@ -155,6 +184,8 @@
                     alert('No file selected');
                     return;
                 }
+                $scope.loading = true;
+                $scope.result = null;
 
                 const formData = new FormData();
                 formData.append('image', $scope.file);
@@ -165,16 +196,19 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert('Image uploaded successfully!');
-                    // Clear file and preview after upload
                     $scope.$apply(() => {
+                        $scope.result = data;
                         $scope.file = null;
                         $scope.previewUrl = null;
+                        $scope.loading = false;
                         fileInput.value = ""; // reset file input
                     });
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    $scope.$apply(() => {
+                        $scope.loading = false;
+                    });
                     alert('Upload failed');
                 });
             };
